@@ -43,6 +43,7 @@ public class UserTests {
     }
 
     @Test
+    @Order(1)
     public void CreateNewUser_WithValidData_ReturnOk() {
         request
                 .body(user)
@@ -59,6 +60,7 @@ public class UserTests {
     }
 
     @Test
+    @Order(2)
     public void GetLogin_ValidUser_ReturnOk() {
         request
                 .param("username", user.getUsername())
@@ -73,5 +75,29 @@ public class UserTests {
     }
 
 
+    @Test
+    @Order(3)
+    public void GetUserByUsername_UserIsValid_ReturnOk() {
+        request
+                .when()
+                .get("/user/" + user.getUsername())
+                .then()
+                .assertThat().statusCode(200).and().time(lessThan(2200L))
+                .and().body("firstName", equalTo(user.getFirstName()));
+
+    }
+
+    @Test
+    @Order(4)
+    public void DeleteUser_UserExists_ReturnOk() {
+        request
+                .when()
+                .delete("/user/" + user.getUsername())
+                .then()
+                .assertThat().statusCode(200).and().time(lessThan(2200L))
+                .log();
+    }
 
 }
+
+
