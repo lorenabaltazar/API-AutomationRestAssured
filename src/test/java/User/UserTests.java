@@ -8,8 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.*;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -56,8 +55,20 @@ public class UserTests {
                 .body("size()", equalTo(3));
 
 
+    }
 
-
+    @Test
+    public void GetLogin_ValidUser_ReturnOk() {
+        request
+                .param("username", user.getUsername())
+                .param("password", user.getPassword())
+                .when()
+                .get("/user/login")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .and().time(lessThan(2000L))
+                .and().body
     }
 
 }
