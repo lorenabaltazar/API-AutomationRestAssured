@@ -8,6 +8,8 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isA;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -18,7 +20,7 @@ public class UserTests {
     public static RequestSpecification request;
 
     @BeforeAll
-    public void setup(){
+    public static void setup(){
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
 
         faker = new Faker();
@@ -33,15 +35,28 @@ public class UserTests {
     }
 
     @BeforeEach
-    void setRequest() {
+    void setRequest(){
         request = given()
-                .header("api-key", "special-key")
+                .header("api=key", "special-key")
                 .contentType(ContentType.JSON);
 
     }
 
     @Test
     public void CreateNewUser_WithValidData_ReturnOk() {
+        request
+                .body(user)
+                .when()
+                .post("/user")
+                .then()
+                .assertThat().statusCode(200).and()
+                .body("code", equalTo(200))
+                .body("type", equalTo("unknown"))
+                .body("message", isA(String.class))
+                .body("size()", equalTo(3));
+
+
+
 
     }
 
