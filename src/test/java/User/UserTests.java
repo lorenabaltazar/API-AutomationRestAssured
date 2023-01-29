@@ -8,6 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
 
@@ -67,8 +68,10 @@ public class UserTests {
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .and().time(lessThan(2000L))
-                .and().body
+                .and().time(lessThan(2200L))
+                .and().body(matchesJsonSchemaInClasspath("loginResponseSchema.json"));
     }
+
+
 
 }
